@@ -14,3 +14,17 @@ curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 ```
 sudo apt-get install -y nodejs
 ```
+
+>prompt-sync
+```
+npm install prompt-sync
+```
+
+>run
+```
+cd Simulador_NoC_Anel_E_Mesh/src/js
+```
+```
+node NoC.js
+```
+
