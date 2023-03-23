@@ -166,6 +166,9 @@ if (modelo === 'A' || modelo === 'a') {
             console.log(`Proc[${lastItem.x},${lastItem.y}] enviou a mensagem para Proc[${obj.x},${obj.y}]`);
             console.log(`Proc[${obj.x},${obj.y}] recebeu a mensagem de Proc[${lastItem.x},${lastItem.y}]`);
             console.log(`Proc[${obj.x},${obj.y}] NÃO é o destino`);
+            const nextProc = listCaminho[idx + 1];
+            console.log(`Proc[${obj.x},${obj.y}] enviou a mensagem para Proc[${nextProc.x},${nextProc.y}]`);
+            console.log(`Proc[${obj.x},${obj.y}] recebeu a mensagem de Proc[${nextProc.x},${nextProc.y}]`);
         }
     };
 
