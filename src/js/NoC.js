@@ -89,20 +89,14 @@ if (modelo === 'A' || modelo === 'a') {
         }
     }
 
-    // Imprimindo a matriz no console com o source e o target
-    for (let i = 0; i < linhas; i++) {
-        let imprimirMatriz = "";
-        for (let j = 0; j < colunas; j++) {
-            imprimirMatriz += matriz[i][j] + " ";
-        }
-        console.log(imprimirMatriz);
-    }
+    console.log(matriz);
 
     // Definindo uma função que retorna os vizinhos de um nó
     function getVizinhos(node) {
         const vizinhos = [];
-        const x = node[0];
-        const y = node[1];
+        const x = parseInt(node[0]);
+        const y = parseInt(node[1]);
+
         if (x > 0) {
             vizinhos.push([x - 1, y]); // vizinho acima
         }
@@ -116,7 +110,11 @@ if (modelo === 'A' || modelo === 'a') {
             vizinhos.push([x, y + 1]); // vizinho à direita
         }
         return vizinhos;
+
     }
+
+    const source = [sourceX, sourceY];
+    const target = [targetX, targetY];
 
     // Implementando o algoritmo BFS
     function bfs(source, target) {
@@ -127,22 +125,28 @@ if (modelo === 'A' || modelo === 'a') {
 
         while (queue.length > 0) {
             const atual = queue.shift();
+
             if (atual.toString() == target.toString()) {
                 // Chegamos ao target, retornamos o caminho
                 const result = [];
                 let node = target.toString();
+
                 while (node !== null) {
-                    result.unshift(node.split(",").map((x) => parseInt(x)));
+                    let [x, y] = node.split(",").map((coord) => parseInt(coord));
+                    result.unshift({ x, y });
+
                     node = caminho.get(node);
                 }
                 return result;
             }
 
             const vizinhos = getVizinhos(atual);
-            for (const vizinho of vizinhos) {
+            for (let i = 0; i < vizinhos.length; i++) {
+                const vizinho = vizinhos[i];
+
                 if (!visitados.has(vizinho.toString())) {
-                    visitados.add(vizinho.toString());
                     queue.push(vizinho);
+                    visitados.add(vizinho.toString());
                     caminho.set(vizinho.toString(), atual.toString());
                 }
             }
@@ -152,21 +156,30 @@ if (modelo === 'A' || modelo === 'a') {
         return null;
     }
 
-    // Executando o algoritmo BFS
-    const caminho = bfs([sourceX, sourceY], [targetX, targetY]);
-    if (caminho !== null) {
-        console.log("Caminho encontrado:");
-        for (const node of caminho) {
-            console.log(node);
+    const mapFunc = (obj, idx, leng, lastItem) => {
+        if (idx === 0) {
+            console.log(`Proc[${obj.x},${obj.y}] criou a mensagem`);
+        } else if (idx + 1 === leng) {
+            console.log(`Proc[${obj.x},${obj.y}] é o destino`);
+            console.log(`Proc[${obj.x},${obj.y}] consumiu a mensagem`);
+        } else {
+            console.log(`Proc[${lastItem.x},${lastItem.y}] enviou a mensagem para Proc[${obj.x},${obj.y}]`);
+            console.log(`Proc[${obj.x},${obj.y}] recebeu a mensagem de Proc[${lastItem.x},${lastItem.y}]`);
+            console.log(`Proc[${obj.x},${obj.y}] NÃO é o destino`);
         }
-    } else {
-        console.log("Não foi possível chegar ao target.");
-    }
+    };
+
+    const listCaminho = bfs([sourceX, sourceY], [targetX, targetY]);
+
+    let lastItem = listCaminho[0];
+    listCaminho.forEach((obj, index) => {
+        mapFunc(obj, index, listCaminho.length, lastItem);
+        lastItem = obj;
+    });
+
 } else {
     while (modelo !== 'm' || modelo !== 'M' || modelo !== 'a' || modelo !== 'A') {
-    console.log('Selecione um modelo válido');
-    const modelo = prompt('Digite A para simular modelo ANEL ou M para simular o modelo MESH-2D');
+        console.log('Selecione um modelo válido');
+        const modelo = prompt('Digite A para simular modelo ANEL ou M para simular o modelo MESH-2D');
     }
-}
-
-
+};
