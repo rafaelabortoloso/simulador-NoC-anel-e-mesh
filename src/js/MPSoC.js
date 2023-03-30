@@ -14,8 +14,8 @@ let altura = parseInt(prompt('Qual a altura da matriz (máximo 9)?'));
 
 while (largura <= 0 || largura > 9 || altura <= 0 || altura > 9) {
   console.log('O tamanho máximo para a matriz é 9x9');
-  let largura = parseInt(prompt('Qual a largura da matriz (máximo 9)?'));
-  let altura = parseInt(prompt('Qual a altura da matriz (máximo 9)?'));
+  largura = parseInt(prompt('Qual a largura da matriz (máximo 9)?'));
+  altura = parseInt(prompt('Qual a altura da matriz (máximo 9)?'));
 };
 
 const tarefas = [];

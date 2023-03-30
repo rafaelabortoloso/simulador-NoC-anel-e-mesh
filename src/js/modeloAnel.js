@@ -1,7 +1,7 @@
 const prompt = require('prompt-sync')();
 
 function anel() {
-    var nodos = prompt('Quantos nodos a rede terá?');
+    let nodos = prompt('Quantos nodos a rede terá?');
 
     //não permite que sejam mais de 10 nodos
     while (nodos <= 0 || nodos > 10) {
@@ -10,9 +10,20 @@ function anel() {
         nodos = newNodos;
     };
 
-    var source = prompt('Quem é o source?');
-    var target = prompt('Quem é o target?');
-    var anterior = source;
+    let source = prompt('Quem é o source?');
+    let target = prompt('Quem é o target?');
+
+    console.log(nodos);
+
+    while (source < 0 || source >= nodos || target < 0 || target >= nodos) {
+        console.log(`O maior nodo é ${nodos - 1}`);
+        const newSource = prompt('Quem é o source?');
+        const newTarget = prompt('Quem é o target?');
+        source = newSource;
+        target = newTarget;
+    };
+
+    let anterior = source;
 
     console.log(`Proc ${source} criou a mensagem`);
 
