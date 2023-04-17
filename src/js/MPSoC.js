@@ -5,65 +5,30 @@ const fs = require('fs');
 const dados = fs.readFileSync('mpsoc.json', 'utf8');
 const objeto = JSON.parse(dados);
 
-const posicaoAplicacao = prompt('Deseja simular a aplicação 0 ou 1?');
+const posicaoAplicacao = 0;
 const aplicacao = objeto.aplicacoes[posicaoAplicacao]; // Acessando a primeira aplicação
 const grafo_tarefas = aplicacao.grafo_tarefas; // Acessando o grafo de tarefas da primeira aplicação
 
-let largura = parseInt(prompt('Qual a largura da matriz (máximo 9)?'));
-let altura = parseInt(prompt('Qual a altura da matriz (máximo 9)?'));
+let largura = 5;
+let altura = 5;
 
-while (largura <= 0 || largura > 9 || altura <= 0 || altura > 9) {
-  console.log('O tamanho máximo para a matriz é 9x9');
-  largura = parseInt(prompt('Qual a largura da matriz (máximo 9)?'));
-  altura = parseInt(prompt('Qual a altura da matriz (máximo 9)?'));
-};
-
-const tarefas = [];
-
-while (true) {
-  const nomeTarefa = prompt('Digite o nome da tarefa ou "parar" para parar ');
-  if (nomeTarefa.toLowerCase() === 'parar') {
-    break;
-  }
-  let posicaoX = parseInt(prompt('Digite a posição X da tarefa:'));
-  let posicaoY = parseInt(prompt('Digite a posição Y da tarefa:'));
-
-  while (posicaoX < 0 || posicaoX >= largura || posicaoY < 0 || posicaoY >= altura) {
-    console.log("As coordenadas do source estão fora dos limites da matriz!");
-    posicaoX = parseInt(prompt('Qual a posição de source no eixo X?'));
-    posicaoY = parseInt(prompt('Qual a posição de source no eixo Y?'));
-  };
-
-  const tarefa = {
-    nome: nomeTarefa,
-    posicaoX: posicaoX,
-    posicaoY: posicaoY
-  };
-
-  tarefas.push(tarefa);
-}
+let meioX = Math.floor(largura / 2);
+let meioY = Math.floor(altura / 2);
 
 //monta a matriz e imprime na tela com os valores 
 const matriz = [];
 for (let i = 0; i < largura; i++) {
   matriz[i] = [];
   for (let j = 0; j < altura; j++) {
-    let tarefaEncontrada = false;
-    for (let k = 0; k < tarefas.length; k++) {
-      const tarefa = tarefas[k];
-      if (tarefa.posicaoX === i && tarefa.posicaoY === j) {
-        matriz[i][j] = tarefa.nome;
-        tarefaEncontrada = true;
-        break;
-      }
-    }
-    if (!tarefaEncontrada) {
-      matriz[i][j] = null;
-    }
+    matriz[i][j] = null;
   }
 }
 
-console.log(matriz);
+const posMeio = [meioX, meioY];
+
+if (matriz[meioX][meioY] == null) {
+  matriz[meioX][meioY] = grafo_tarefas[0].tarefa_origem;
+};
 
 //localiza os inputs no json
 grafo_tarefas.forEach((tarefa) => {
@@ -71,13 +36,46 @@ grafo_tarefas.forEach((tarefa) => {
   let target = tarefa.tarefa_destino;
   let custo = tarefa.quantidade_pacotes;
 
-  let tarefaSource = tarefas.find((t) => t.nome.toUpperCase() === source); //compara os imputs com o arquivo json
-  let tarefaTarget = tarefas.find((t) => t.nome.toUpperCase() === target);
+  const sourceExiste = srcExt(matriz, source);
+  const targetExiste = tgtExt(matriz, target);
 
-  if (tarefaTarget) {
-    bfs([tarefaSource.posicaoX, tarefaSource.posicaoY], [tarefaTarget.posicaoX, tarefaTarget.posicaoY], custo);
+  getVizinhos([meioX, meioY])
+
+});
+
+function srcExt(matriz, source){
+  for (let i = 0; i < matriz.length; i++) {
+    for (let j = 0; j < matriz[i].length; j++) {
+      if (matriz[i][j] == source) {
+        return true;
+      }
+    }
   }
-})
+  return false;
+};
+
+function tgtExt(matriz, target){
+  for (let i = 0; i < matriz.length; i++) {
+    for (let j = 0; j < matriz[i].length; j++) {
+      if (matriz[i][j] == target) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
+// function mapeamento(tarefa){
+//   let posVazia = posicaoVazia();
+//   matriz[posVazia.posX][posVazia.posY] = tarefa;
+// }
+
+// function posicaoVazia(){
+//   const vizinhos = getVizinhos([meioX, meioY], largura, altura);
+//   return vizinhos.find((vizinho) => {
+//     return matriz[vizinho.posX][vizinho.posY] === null;
+//   })
+// };
 
 // Definindo uma função que retorna os vizinhos de um nó
 function getVizinhos(node) {
@@ -97,6 +95,7 @@ function getVizinhos(node) {
   if (y < altura - 1) {
     vizinhos.push([x, y + 1]); // vizinho à direita
   }
+  console.log(vizinhos);
   return vizinhos;
 
 }
@@ -133,7 +132,6 @@ function bfs(source, target, custo) {
       });
 
     }
-
 
     const vizinhos = getVizinhos(atual);
 
