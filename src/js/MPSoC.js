@@ -30,8 +30,6 @@ fs.readFile(jsonFilePath, 'utf8', (err, data) => {
     // Repete o app a quantidade de vezes especificada em 'QTD'
     for (let i = 0; i < parseInt(item.QTD); i++) {
 
-
-
       for (const app of apps) {
         const appName = app.APP;
         const appFile = jsonFilePath = path.join(__dirname, 'JsonTeste', `Applications/${appName}.json`);
@@ -65,6 +63,7 @@ fs.readFile(jsonFilePath, 'utf8', (err, data) => {
 
           //insere a primeira tarefa em uma posiçao aleatoria da matriz
           if (matriz[noInicial[0]][noInicial[1]] == null) {
+            console.log('teste0');
             matriz[noInicial[0]][noInicial[1]] = [];
             matriz[noInicial[0]][noInicial[1]].push(grafo_tarefas[0].tarefa_origem);
           };
@@ -78,11 +77,15 @@ fs.readFile(jsonFilePath, 'utf8', (err, data) => {
             const targetPosition = srcExt(matriz, target);
 
             if (sourcePosition) { //verifica se o source ja existe
+              console.log('teste1');
               if (matriz[sourcePosition[0]][sourcePosition[1]].length < tasks) { //verifica se o no do source ja esta cheio
+                console.log('teste2');
                 if (!targetPosition) { //verifica se o target nao existe
+                  console.log('teste3');
                   matriz[sourcePosition[0]][sourcePosition[1]].push(target); //coloca o target no mesmo no do source
                 }
               } else { //se o no do source ja estiver cheio
+                console.log('teste4');
                 const vizinhos = getVizinhos([sourcePosition[0], sourcePosition[1]]) //pega os vizinhos do no onde esta o source
                 const newTargetPosition = vizinhos.find((v) => {
                   return matriz[v[0]][v[1]] === null;
@@ -90,11 +93,13 @@ fs.readFile(jsonFilePath, 'utf8', (err, data) => {
                 //console.log(newTargetPosition);
 
                 if (!targetPosition) {
+                  console.log('teste5');
                   matriz[newTargetPosition[0]][newTargetPosition[1]] = [];
                   matriz[newTargetPosition[0]][newTargetPosition[1]].push(target);
                 }
               }
-            } else {
+            } else { //se o source não existe
+              console.log('teste6');
               const newSourcePosition = getVizinhos(noInicial).find((v) => {
                 //console.log(matriz[v[0]][v[1]]);
                 return matriz[v[0]][v[1]] == null;
@@ -135,18 +140,6 @@ fs.readFile(jsonFilePath, 'utf8', (err, data) => {
             }
             return false;
           };
-
-          // function mapeamento(tarefa){
-          //   let posVazia = posicaoVazia();
-          //   matriz[posVazia.posX][posVazia.posY] = tarefa;
-          // }
-
-          // function posicaoVazia(){
-          //   const vizinhos = getVizinhos([meioX, meioY], largura, altura);
-          //   return vizinhos.find((vizinho) => {
-          //     return matriz[vizinho.posX][vizinho.posY] === null;
-          //   })
-          // };
 
           // Definindo uma função que retorna os vizinhos de um nó
           function getVizinhos(node) {
@@ -221,17 +214,6 @@ fs.readFile(jsonFilePath, 'utf8', (err, data) => {
           }
 
           console.table(matriz);
-
-          // let numberMatriz = []
-          // for (let i = 0; i < largura; i++) {
-          //   numberMatriz[i] = [];
-          //   for (let j = 0; j < altura; j++) {
-          //     numberMatriz[i][j] = null;
-          //   }
-          // }
-          // grafo_tarefas.forEach((tarefa) => {
-          //    source = 
-          // })
         });
       }
     }
